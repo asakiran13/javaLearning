@@ -1,0 +1,13 @@
+class Person {
+    String firstName;
+    String lastName;
+    int age;
+}
+
+Given a list of Persons,
+
+Q1: sort the list by last Name lexographically
+
+Q2: Create a method that prints all elements in the list
+
+Q3: Create a method that prints all persons who's last name starts with C.
