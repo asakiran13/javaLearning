@@ -79,22 +79,18 @@ public class StringMatching {
 		return;
 	}
 
-	private static int computeNextState(String s){
-		int m = s.length();
-		int max = 0;
-		for(int i = 1; i < m; i++){
-			String subString = s.substring(0, i);
-			if(s.substring(m - i, m).compareTo(subString) == 0) max = i;
-		}
-		return max;
-	}
 	private static int[][] buildFiniteAutomata(String pattern){
-		int noOfStates = pattern.length();
-		int[][] FA = new int[noOfStates + 1][NO_OF_CHARS];
-		for(int i = 0; i <= noOfStates; i++){
-			for(int j = 0; j < NO_OF_CHARS; j++){
-				FA[i][j] = computeNextState(pattern.substring(0, i) + (char)j);
+		int m = pattern.length();
+		int[][] FA = new int[m + 1][NO_OF_CHARS];
+		FA[0][pattern.charAt(0)] = 1;
+		int lps = 0;
+		for(int state = 1; state < m; state++){
+			for(int i = 0; i < NO_OF_CHARS; i++){
+				FA[state][i] = FA[lps][i];
 			}
+			FA[state][pattern.charAt(state)] = state + 1;
+			if(state < m)
+				lps = FA[lps][pattern.charAt(state)];
 		}
 		return FA;
 	}
@@ -104,13 +100,14 @@ public class StringMatching {
 		int m = pattern.length();
 		int n = text.length();
 		int[][] FA = buildFiniteAutomata(pattern);
-		int currenState = 0;
+		int curState = 0;
 		for(int i = 0; i < n; i++){
-			if(currenState == m){
-				System.out.println("Pattern occurs at index:" + (i - m +1));
+			curState = FA[curState][text.charAt(i)];
+			if(curState == m){
+				System.out.println("Pattern found at index: " + (i-m+1));
 			}
-			currenState = FA[currenState][(int) text.charAt(i)];
 		}
+		return;
 	}
 
 
